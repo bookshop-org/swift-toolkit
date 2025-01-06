@@ -71,6 +71,9 @@ final class PaginationView: UIView, Loggable {
     private let preloadPreviousPositionCount: Int
     private let preloadNextPositionCount: Int
 
+    /// Disables horizontal page turning when scrolling.
+    private let disablePageTurnsWhileScrolling: Bool
+
     /// Queue of page index to be loaded next.
     private var loadingIndexQueue: [(index: Int, location: PageLocation)] = []
 
@@ -99,9 +102,16 @@ final class PaginationView: UIView, Loggable {
 
     private let scrollView = UIScrollView()
 
-    init(frame: CGRect, preloadPreviousPositionCount: Int, preloadNextPositionCount: Int) {
+    init(
+        frame: CGRect,
+        preloadPreviousPositionCount: Int,
+        preloadNextPositionCount: Int,
+        disablePageTurnsWhileScrolling: Bool
+    ) {
         self.preloadPreviousPositionCount = preloadPreviousPositionCount
         self.preloadNextPositionCount = preloadNextPositionCount
+
+        self.disablePageTurnsWhileScrolling = disablePageTurnsWhileScrolling
 
         super.init(frame: frame)
 
@@ -111,6 +121,7 @@ final class PaginationView: UIView, Loggable {
         scrollView.isPagingEnabled = true
         scrollView.bounces = false
         scrollView.showsHorizontalScrollIndicator = false
+        scrollView.isScrollEnabled = !disablePageTurnsWhileScrolling
         addSubview(scrollView)
 
         // Adds an empty view before the scroll view to have a consistent behavior on all iOS
@@ -332,7 +343,7 @@ final class PaginationView: UIView, Loggable {
             return
         }
 
-        scrollView.isScrollEnabled = true
+        scrollView.isScrollEnabled = !disablePageTurnsWhileScrolling
         setCurrentIndex(index, location: location, completion: completion)
 
         scrollView.scrollRectToVisible(CGRect(

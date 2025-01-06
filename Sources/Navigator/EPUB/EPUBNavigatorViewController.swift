@@ -102,6 +102,9 @@ open class EPUBNavigatorViewController: UIViewController,
 
         /// Default user settings.
         public var userSettings: UserSettings
+        
+        /// Disables horizontal page turning when scroll is enabled.
+        public let disablePageTurnsWhileScrolling: Bool
 
         public init(
             userSettings: UserSettings = UserSettings(),
@@ -117,7 +120,8 @@ open class EPUBNavigatorViewController: UIViewController,
             decorationTemplates: [Decoration.Style.Id: HTMLDecorationTemplate] = HTMLDecorationTemplate.defaultTemplates(),
             fontFamilyDeclarations: [AnyHTMLFontFamilyDeclaration] = [],
             readiumCSSRSProperties: CSSRSProperties = CSSRSProperties(),
-            debugState: Bool = false
+            debugState: Bool = false,
+            disablePageTurnsWhileScrolling: Bool = false
         ) {
             self.userSettings = userSettings
             self.preferences = preferences
@@ -130,6 +134,7 @@ open class EPUBNavigatorViewController: UIViewController,
             self.fontFamilyDeclarations = fontFamilyDeclarations
             self.readiumCSSRSProperties = readiumCSSRSProperties
             self.debugState = debugState
+            self.disablePageTurnsWhileScrolling = disablePageTurnsWhileScrolling
         }
     }
 
@@ -562,7 +567,8 @@ open class EPUBNavigatorViewController: UIViewController,
         let view = PaginationView(
             frame: .zero,
             preloadPreviousPositionCount: hasPositions ? config.preloadPreviousPositionCount : 0,
-            preloadNextPositionCount: hasPositions ? config.preloadNextPositionCount : 0
+            preloadNextPositionCount: hasPositions ? config.preloadNextPositionCount : 0,
+            disablePageTurnsWhileScrolling: config.disablePageTurnsWhileScrolling
         )
         view.delegate = self
         view.backgroundColor = .clear
