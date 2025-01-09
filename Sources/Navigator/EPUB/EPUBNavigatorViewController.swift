@@ -568,7 +568,7 @@ open class EPUBNavigatorViewController: UIViewController,
             frame: .zero,
             preloadPreviousPositionCount: hasPositions ? config.preloadPreviousPositionCount : 0,
             preloadNextPositionCount: hasPositions ? config.preloadNextPositionCount : 0,
-            disablePageTurnsWhileScrolling: config.disablePageTurnsWhileScrolling
+            isScrollEnabled: isPaginationViewScrollingEnabled(with: settings)
         )
         view.delegate = self
         view.backgroundColor = .clear
@@ -660,6 +660,10 @@ open class EPUBNavigatorViewController: UIViewController,
         paginationView.loadedViews
             .compactMap { _, view in view as? EPUBSpreadView }
             .first { $0.spread.links.first(withHREF: href) != nil }
+    }
+
+    private func isPaginationViewScrollingEnabled(with settings: EPUBSettings) -> Bool {
+        !(config.disablePageTurnsWhileScrolling && settings.scroll)
     }
 
     // MARK: - Navigator
@@ -928,6 +932,7 @@ open class EPUBNavigatorViewController: UIViewController,
 
 extension EPUBNavigatorViewController: EPUBNavigatorViewModelDelegate {
     func epubNavigatorViewModelInvalidatePaginationView(_ viewModel: EPUBNavigatorViewModel) {
+        paginationView.isScrollEnabled = isPaginationViewScrollingEnabled(with: viewModel.settings)
         reloadSpreads(force: true)
     }
 

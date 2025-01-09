@@ -71,9 +71,6 @@ final class PaginationView: UIView, Loggable {
     private let preloadPreviousPositionCount: Int
     private let preloadNextPositionCount: Int
 
-    /// Disables horizontal page turning when scrolling.
-    private let disablePageTurnsWhileScrolling: Bool
-
     /// Queue of page index to be loaded next.
     private var loadingIndexQueue: [(index: Int, location: PageLocation)] = []
 
@@ -102,16 +99,19 @@ final class PaginationView: UIView, Loggable {
 
     private let scrollView = UIScrollView()
 
+    /// Allows the scroll view to scroll.
+    var isScrollEnabled: Bool
+    
     init(
         frame: CGRect,
         preloadPreviousPositionCount: Int,
         preloadNextPositionCount: Int,
-        disablePageTurnsWhileScrolling: Bool
+        isScrollEnabled: Bool
     ) {
         self.preloadPreviousPositionCount = preloadPreviousPositionCount
         self.preloadNextPositionCount = preloadNextPositionCount
 
-        self.disablePageTurnsWhileScrolling = disablePageTurnsWhileScrolling
+        self.isScrollEnabled = isScrollEnabled
 
         super.init(frame: frame)
 
@@ -121,7 +121,7 @@ final class PaginationView: UIView, Loggable {
         scrollView.isPagingEnabled = true
         scrollView.bounces = false
         scrollView.showsHorizontalScrollIndicator = false
-        scrollView.isScrollEnabled = !disablePageTurnsWhileScrolling
+        scrollView.isScrollEnabled = isScrollEnabled
         addSubview(scrollView)
 
         // Adds an empty view before the scroll view to have a consistent behavior on all iOS
@@ -343,7 +343,7 @@ final class PaginationView: UIView, Loggable {
             return
         }
 
-        scrollView.isScrollEnabled = !disablePageTurnsWhileScrolling
+        scrollView.isScrollEnabled = isScrollEnabled
         setCurrentIndex(index, location: location, completion: completion)
 
         scrollView.scrollRectToVisible(CGRect(
@@ -368,17 +368,17 @@ extension PaginationView: UIScrollViewDelegate {
     }
 
     func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-        scrollView.isScrollEnabled = true
+        scrollView.isScrollEnabled = isScrollEnabled
     }
 
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         if !decelerate {
-            scrollView.isScrollEnabled = true
+            scrollView.isScrollEnabled = isScrollEnabled
         }
     }
 
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        scrollView.isScrollEnabled = true
+        scrollView.isScrollEnabled = isScrollEnabled
 
         let currentOffset = (readingProgression == .rtl)
             ? scrollView.contentSize.width - (scrollView.contentOffset.x + scrollView.frame.width)
