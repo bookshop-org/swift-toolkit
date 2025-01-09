@@ -60,7 +60,8 @@ class EPUBViewController: VisualReaderViewController<EPUBNavigatorViewController
                             ),
                         ]
                     ).eraseToAnyHTMLFontFamilyDeclaration(),
-                ]
+                ],
+                disablePageTurnsWhileScrolling: true
             ),
             httpServer: GCDHTTPServer.shared
         )
