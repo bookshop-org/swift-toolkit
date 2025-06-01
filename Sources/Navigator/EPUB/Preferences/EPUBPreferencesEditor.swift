@@ -309,6 +309,18 @@ public final class EPUBPreferencesEditor: StatefulPreferencesEditor<EPUBPreferen
             }
         )
 
+    /// Indicates if scrolling should be continuous across resources (chapters)
+    /// instead of being reset at each resource boundary.
+    ///
+    /// Only effective when `scroll` is on.
+    public lazy var continuousScroll: AnyPreference<Bool> =
+    preference(
+        preference: \.continuousScroll,
+        setting: \.continuousScroll,
+        defaultEffectiveValue: defaults.continuousScroll ?? false,
+        isEffective: { $0.settings.scroll }
+    )
+
     /// Indicates if the fixed-layout publication should be rendered with a
     /// synthetic spread (dual-page).
     ///

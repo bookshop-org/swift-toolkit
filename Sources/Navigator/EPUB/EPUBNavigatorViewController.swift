@@ -336,6 +336,19 @@ open class EPUBNavigatorViewController: UIViewController,
     }
 
     private func initialize() async {
+
+        await initializePaginationView()
+
+        if #available(iOS 14.0, *) {
+            initializeContinuousScrollView()
+
+            updateContentView()
+        }
+
+        onInitializedCallbacks.complete()
+    }
+
+    private func initializePaginationView() async {
         do {
             positionsByReadingOrder = try await loadPositionsByReadingOrder().get()
         } catch {
@@ -353,8 +366,27 @@ open class EPUBNavigatorViewController: UIViewController,
         applySettings()
 
         await _reloadSpreads(at: currentLocation, force: false)
+    }
+
+    @available(iOS 14.0, *)
+    private func initializeContinuousScrollView() {
+        continuousScrollViewController.view.backgroundColor = .clear
+        continuousScrollViewController.view.frame = view.bounds
+        continuousScrollViewController.view.autoresizingMask = [.flexibleHeight, .flexibleWidth]
+        view.addSubview(continuousScrollViewController.view)
+
+        applySettings()
 
         onInitializedCallbacks.complete()
+    }
+
+    private func updateContentView() {
+        if #available(iOS 14.0, *) {
+            paginationView?.isHidden = settings.continuousScroll
+            continuousScrollViewController.view.isHidden = !settings.continuousScroll
+        } else {
+            paginationView?.isHidden = false
+        }
     }
 
     private let onInitializedCallbacks = CompletionList()
@@ -515,6 +547,17 @@ open class EPUBNavigatorViewController: UIViewController,
 
     @available(*, unavailable, message: "See the 2.5.0 migration guide to migrate to the Preferences API")
     public func updateUserSettingStyle() {}
+
+    // MARK: - Continuous Scroll
+
+    private var _continuousScrollViewController: UIViewController?
+    @available(iOS 14.0, *)
+    private var continuousScrollViewController: ContinuousScrollViewController {
+        if _continuousScrollViewController == nil {
+            _continuousScrollViewController = ContinuousScrollViewController()
+        }
+        return _continuousScrollViewController as! ContinuousScrollViewController
+    }
 
     // MARK: - Pagination and spreads
 
@@ -881,6 +924,8 @@ open class EPUBNavigatorViewController: UIViewController,
 
         view.backgroundColor = settings.effectiveBackgroundColor.uiColor
         paginationView?.isScrollEnabled = isPaginationViewScrollingEnabled
+
+        updateContentView()
     }
 
     // MARK: - User interactions

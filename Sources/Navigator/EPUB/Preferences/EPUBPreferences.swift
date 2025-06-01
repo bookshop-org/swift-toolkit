@@ -66,6 +66,10 @@ public struct EPUBPreferences: ConfigurablePreferences {
     /// scrolling instead of synthetic pagination.
     public var scroll: Bool?
 
+    /// Indicates if scrolling should be continuous across chapters
+    /// instead of being reset at each chapter boundary.
+    public var continuousScroll: Bool?
+
     /// Indicates if the fixed-layout publication should be rendered with a
     /// synthetic spread (dual-page).
     public var spread: Spread?
@@ -112,6 +116,7 @@ public struct EPUBPreferences: ConfigurablePreferences {
         publisherStyles: Bool? = nil,
         readingProgression: ReadingProgression? = nil,
         scroll: Bool? = nil,
+        continuousScroll: Bool? = nil,
         spread: Spread? = nil,
         textAlign: TextAlignment? = nil,
         textColor: Color? = nil,
@@ -138,6 +143,7 @@ public struct EPUBPreferences: ConfigurablePreferences {
         self.publisherStyles = publisherStyles
         self.readingProgression = readingProgression
         self.scroll = scroll
+        self.continuousScroll = continuousScroll
         self.spread = [nil, .never, .always].contains(spread) ? spread : nil
         self.textAlign = textAlign
         self.textColor = textColor
@@ -167,6 +173,7 @@ public struct EPUBPreferences: ConfigurablePreferences {
             publisherStyles: other.publisherStyles ?? publisherStyles,
             readingProgression: other.readingProgression ?? readingProgression,
             scroll: other.scroll ?? scroll,
+            continuousScroll: other.continuousScroll ?? continuousScroll,
             spread: other.spread ?? spread,
             textAlign: other.textAlign ?? textAlign,
             textColor: other.textColor ?? textColor,

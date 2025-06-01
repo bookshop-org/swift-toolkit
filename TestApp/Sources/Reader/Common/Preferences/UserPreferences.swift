@@ -95,6 +95,7 @@ struct UserPreferences<
                             commit: commit,
                             backgroundColor: editor.backgroundColor,
                             columnCount: editor.columnCount,
+                            continuousScroll: editor.continuousScroll.eraseToAnyPreference(),
                             fontFamily: editor.fontFamily,
                             fontSize: editor.fontSize,
                             fontWeight: editor.fontWeight,
@@ -300,6 +301,7 @@ struct UserPreferences<
         commit: @escaping () -> Void,
         backgroundColor: AnyPreference<ReadiumNavigator.Color>? = nil,
         columnCount: AnyEnumPreference<ColumnCount>? = nil,
+        continuousScroll: AnyPreference<Bool>? = nil,
         fontFamily: AnyPreference<FontFamily?>? = nil,
         fontSize: AnyRangePreference<Double>? = nil,
         fontWeight: AnyRangePreference<Double>? = nil,
@@ -363,6 +365,14 @@ struct UserPreferences<
                     toggleRow(
                         title: "Scroll",
                         preference: scroll,
+                        commit: commit
+                    )
+                }
+
+                if let continuousScroll = continuousScroll {
+                    toggleRow(
+                        title: "Continuous scroll",
+                        preference: continuousScroll,
                         commit: commit
                     )
                 }

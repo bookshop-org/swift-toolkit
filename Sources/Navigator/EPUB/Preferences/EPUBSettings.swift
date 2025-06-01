@@ -28,6 +28,7 @@ public struct EPUBSettings: ConfigurableSettings {
     public var publisherStyles: Bool
     public var readingProgression: ReadingProgression
     public var scroll: Bool
+    public var continuousScroll: Bool
     public var spread: Spread
     public var textAlign: TextAlignment?
     public var textColor: Color?
@@ -61,6 +62,7 @@ public struct EPUBSettings: ConfigurableSettings {
         publisherStyles: Bool,
         readingProgression: ReadingProgression,
         scroll: Bool,
+        continuousScroll: Bool,
         spread: Spread,
         textAlign: TextAlignment?,
         textColor: Color?,
@@ -87,6 +89,7 @@ public struct EPUBSettings: ConfigurableSettings {
         self.publisherStyles = publisherStyles
         self.readingProgression = readingProgression
         self.scroll = scroll
+        self.continuousScroll = continuousScroll
         self.spread = spread
         self.textAlign = textAlign
         self.textColor = textColor
@@ -134,6 +137,8 @@ public struct EPUBSettings: ConfigurableSettings {
             scroll = true
         }
 
+        let continuousScroll = preferences.continuousScroll ?? defaults.continuousScroll ?? false
+
         self.init(
             backgroundColor: preferences.backgroundColor,
             columnCount: preferences.columnCount
@@ -168,6 +173,7 @@ public struct EPUBSettings: ConfigurableSettings {
                 ?? true,
             readingProgression: readingProgression,
             scroll: scroll,
+            continuousScroll: continuousScroll,
             spread: preferences.spread
                 ?? Spread(metadata.presentation.spread)
                 ?? defaults.spread
@@ -216,6 +222,7 @@ public struct EPUBDefaults {
     public var textNormalization: Bool?
     public var typeScale: Double?
     public var wordSpacing: Double?
+    public var continuousScroll: Bool?
 
     public init(
         columnCount: ColumnCount? = nil,
@@ -237,7 +244,8 @@ public struct EPUBDefaults {
         textAlign: TextAlignment? = nil,
         textNormalization: Bool? = nil,
         typeScale: Double? = nil,
-        wordSpacing: Double? = nil
+        wordSpacing: Double? = nil,
+        continuousScroll: Bool? = nil
     ) {
         self.columnCount = columnCount
         self.fontSize = fontSize
@@ -259,6 +267,7 @@ public struct EPUBDefaults {
         self.textNormalization = textNormalization
         self.typeScale = typeScale
         self.wordSpacing = wordSpacing
+        self.continuousScroll = continuousScroll
     }
 }
 
